@@ -1,5 +1,6 @@
 from django.urls import path, include
 
+
 urlpatterns = [
-    # path('', include('lottery.urls')),
+    path('', include('lottery.urls')),
 ]
