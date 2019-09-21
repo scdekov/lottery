@@ -6,7 +6,7 @@ class TicketsMeta(models.base.ModelBase):
     def __new__(cls, clsname, bases, dct):
         newclass = super(TicketsMeta, cls).__new__(cls, clsname, bases, dct)
         for ix in range(1, newclass.BIGGEST_NUMBER + 1):
-            field = models.SmallIntegerField(null=False)
+            field = models.SmallIntegerField(null=False, default=0)
             newclass.add_to_class('is_{}_selected'.format(ix), field)
 
         return newclass
@@ -17,3 +17,9 @@ class Ticket(models.Model, metaclass=TicketsMeta):
 
     nickname = models.CharField(max_length=256)
     numbers = ArrayField(models.SmallIntegerField(), size=6)
+
+    def save(self, *args, **kwargs):
+        for selected_number in self.numbers:
+            setattr(self, 'is_{}_selected'.format(selected_number), 1)
+
+        super().save(*args, **kwargs)
