@@ -1,5 +1,39 @@
+import random
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+
+
+class Game(models.Model):
+    winning_numbers = ArrayField(models.SmallIntegerField(), size=6, null=True)
+    is_active = models.BooleanField(default=True)
+
+    def draw(self):
+        if not self.is_active:
+            return
+
+        self.winning_numbers = self.winning_numbers or []
+        while len(self.winning_numbers) < 6:
+            number = random.randint(1, 49)
+            if number not in self.winning_numbers:
+                self.winning_numbers.append(number)
+
+        self.is_active = False
+        self.save()
+
+    @property
+    def winners(self):
+        if self.is_active:
+            return []
+
+        winners_filter = ' + '.join(['is_{}_selected'.format(winning_number)
+                                     for winning_number in self.winning_numbers])
+
+        return list(Ticket.objects.raw("""
+            SELECT * FROM (
+                SELECT id, nickname, numbers, {} as matching_numbers FROM lottery_ticket
+            ) as t where matching_numbers > 2
+        """.format(winners_filter)))
 
 
 class TicketsMeta(models.base.ModelBase):
@@ -17,8 +51,10 @@ class Ticket(models.Model, metaclass=TicketsMeta):
 
     nickname = models.CharField(max_length=256)
     numbers = ArrayField(models.SmallIntegerField(), size=6)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
+        # TODO: check if numbers are unique
         for selected_number in self.numbers:
             setattr(self, 'is_{}_selected'.format(selected_number), 1)
 
