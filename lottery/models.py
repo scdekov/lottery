@@ -30,10 +30,9 @@ class Game(models.Model):
                                      for winning_number in self.winning_numbers])
 
         return list(Ticket.objects.raw("""
-            SELECT * FROM (
-                SELECT id, nickname, numbers, {} as matching_numbers FROM lottery_ticket
-            ) as t where matching_numbers > 2
-        """.format(winners_filter)))
+            SELECT id, nickname, numbers, {winners_filter} as matching_numbers FROM lottery_ticket
+            where {winners_filter} > 2
+        """.format(winners_filter=winners_filter)))
 
 
 class TicketsMeta(models.base.ModelBase):
