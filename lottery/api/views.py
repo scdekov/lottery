@@ -8,10 +8,15 @@ from lottery.models import Ticket, Game
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = ('id', 'nickname', 'numbers')
+        fields = ('id', 'nickname', 'numbers', 'game')
+
+    def validate(self, attrs):
+        instance = Ticket(**attrs)
+        instance.clean()
+        return attrs
 
 
-class CreateTicketView(APIView):
+class TicketsView(APIView):
     def get(self, request):
         return Response(data=TicketSerializer(Ticket.objects.all(), many=True).data)
 
@@ -20,7 +25,8 @@ class CreateTicketView(APIView):
         serializer.is_valid(raise_exception=True)
 
         Ticket.objects.create(nickname=serializer.validated_data['nickname'],
-                              numbers=serializer.validated_data['numbers'])
+                              numbers=serializer.validated_data['numbers'],
+                              game=serializer.validated_data['game'])
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -49,7 +55,7 @@ class GameViewSet(mixins.CreateModelMixin,
     serializer_class = GameSeriazlier
 
     @decorators.action(methods=['POST'], url_path='@draw', detail=True)
-    def draw(self, request):
+    def draw(self, request, *args, **kwargs):
         game = self.get_object()
         game.draw()
         return Response(status=status.HTTP_202_ACCEPTED)

@@ -1,6 +1,7 @@
 import random
 
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -53,8 +54,12 @@ class Ticket(models.Model, metaclass=TicketsMeta):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        # TODO: check if numbers are unique
+        self.full_clean()
         for selected_number in self.numbers:
             setattr(self, 'is_{}_selected'.format(selected_number), 1)
 
         super().save(*args, **kwargs)
+
+    def clean(self):
+        if len(set(self.numbers)) != 6 or any([n not in range(1, self.BIGGEST_NUMBER + 1) for n in self.numbers]):
+            raise ValidationError('numbers should be 6 and unique and in range 1-{}'.format(self.BIGGEST_NUMBER))

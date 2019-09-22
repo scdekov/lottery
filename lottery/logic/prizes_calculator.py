@@ -12,6 +12,7 @@ class PrizesCalculator:
 
     @classmethod
     def add_prizes(cls, winners):
+        winners = list(winners)
         prize_shares_per_winner = cls._get_prize_shares_per_winner(winners)
         for winner in winners:
             winner['prize'] = prize_shares_per_winner[winner['matching_numbers']]
