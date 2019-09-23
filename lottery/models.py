@@ -20,7 +20,6 @@ class Game(models.Model):
                 self.winning_numbers.append(number)
 
         # self.is_active = False
-        self.winning_numbers = [48,43,44,47,46,45]
         self.save()
 
     @property
