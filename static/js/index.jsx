@@ -6,6 +6,8 @@ class Winners extends React.Component{
         return (
             <div className="winners-table">
                 <p>Winning numbers: {this.props.winningNumbers.join(', ')}</p>
+                {(() => this.props.winners.length ? null : <p>No winners</p>)()}
+                {(() => this.props.winners.length ?
                 <table>
                     <thead>
                         <tr>
@@ -17,7 +19,7 @@ class Winners extends React.Component{
                     </thead>
                     <tbody>
                         {(() => this.props.winners.map(winner => (
-                            <React.Fragment>
+                            <React.Fragment key={winner.nickname}>
                                 <tr>
                                     <td>{winner.nickname}</td>
                                     <td>{winner.numbers.join(', ')}</td>
@@ -28,6 +30,7 @@ class Winners extends React.Component{
                         )))()}
                     </tbody>
                 </table>
+                : null)()}
             </div>
         )
     }

@@ -81,3 +81,7 @@
 .winners-table th {
     text-align: left;
 }
+
+.winners-table table {
+    width: 100%;
+}
