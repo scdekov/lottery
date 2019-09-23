@@ -18,7 +18,7 @@ class Winners extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {(() => this.props.winners.sort((a, b) => b.winning_numbers - a.winning_numbers)
+                        {(() => this.props.winners.sort((a, b) => a.matching - b.matching_numbers)
                                                   .map(winner => (
                             <React.Fragment key={winner.id}>
                                 <tr>
