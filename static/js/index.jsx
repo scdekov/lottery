@@ -198,10 +198,10 @@ class Ticket extends React.Component {
                 <div className="ticket-footer">
                     <img src="/static/images/sfera.png"/>
                     <span className="footer-text">6/49</span>
+                    <button className="submit-button" onClick={this.draw.bind(this)}>Draw</button>
                     <button className="submit-button"
                             onClick={this.submitTicket.bind(this)}
                             >Submit</button>
-                    <button className="submit-button" onClick={this.draw.bind(this)}>Draw</button>
                     <input className="submit-button"
                             type="text"
                             onChange={(e) => this.setState({
