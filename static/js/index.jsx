@@ -77,7 +77,8 @@ class Ticket extends React.Component {
             nickname: '',
             gameId: null,
             submittedTicketsCount: 0,
-            winningNumbers: []
+            winningNumbers: [],
+            winners: []
         };
     }
 
@@ -139,6 +140,7 @@ class Ticket extends React.Component {
     }
 
     draw() {
+        this.setState({winners: [], winningNumbers: []});
         fetch('/api/games/' + this.state.gameId + '/@draw/', {method: 'POST'})
         .then((resp) => {
             if (!resp.status === 202) {
