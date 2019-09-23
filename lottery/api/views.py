@@ -3,6 +3,7 @@ from rest_framework import serializers, status, viewsets, mixins, decorators
 from rest_framework.response import Response
 
 from lottery.models import Ticket, Game
+from lottery.logic.prizes_calculator import PrizesCalculator
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -48,11 +49,16 @@ class GameSeriazlier(serializers.ModelSerializer):
     winners = WinnerTicketSerializer(many=True, read_only=True)
 
 
-class GameViewSet(mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet):
+class GameViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSeriazlier
+
+    def retrieve(self, request, *args, **kwargs):
+        game = self.get_object()
+        serializer = self.get_serializer(game)
+        data = serializer.data
+        data['winners'] = PrizesCalculator.add_prizes(data['winners'])
+        return Response(data)
 
     @decorators.action(methods=['POST'], url_path='@draw', detail=True)
     def draw(self, request, *args, **kwargs):

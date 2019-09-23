@@ -13,18 +13,18 @@ class Game(models.Model):
         if not self.is_active:
             return
 
-        self.winning_numbers = self.winning_numbers or []
+        self.winning_numbers = []
         while len(self.winning_numbers) < 6:
             number = random.randint(1, 49)
             if number not in self.winning_numbers:
                 self.winning_numbers.append(number)
 
-        self.is_active = False
+        # self.is_active = False
         self.save()
 
     @property
     def winners(self):
-        if self.is_active:
+        if not self.winning_numbers:
             return []
 
         winners_filter = ' + '.join(['is_{}_selected'.format(winning_number)
