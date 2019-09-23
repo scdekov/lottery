@@ -30,6 +30,7 @@
     flex: 1 0 13%;
     font-size: 24px;
     position: relative;
+    cursor: pointer;
 }
 
 .ticket-block-background {
