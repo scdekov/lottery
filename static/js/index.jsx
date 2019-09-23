@@ -18,8 +18,9 @@ class Winners extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {(() => this.props.winners.map(winner => (
-                            <React.Fragment key={winner.nickname}>
+                        {(() => this.props.winners.sort((a, b) => b.winning_numbers - a.winning_numbers)
+                                                  .map(winner => (
+                            <React.Fragment key={winner.id}>
                                 <tr>
                                     <td>{winner.nickname}</td>
                                     <td>{winner.numbers.join(', ')}</td>
@@ -75,6 +76,7 @@ class Ticket extends React.Component {
             selectedNumbers: [[], [], [], []],
             nickname: '',
             gameId: null,
+            submittedTicketsCount: 0,
             winningNumbers: []
         };
     }
@@ -88,7 +90,10 @@ class Ticket extends React.Component {
             } else {
                 return resp.json();
             }
-        }).then(respJson => this.setState({gameId: respJson.id}))
+        }).then(respJson => this.setState({
+            gameId: respJson.id,
+            submittedTicketsCount: respJson.submitted_tickets_count
+        }))
     }
 
     submitTicket() {
@@ -116,7 +121,7 @@ class Ticket extends React.Component {
                 console.error(responses);
                 return;
             }
-            alert('success');
+            this.setState({submittedTicketsCount: this.state.submittedTicketsCount + 4});
             this.clear();
         });
     }
@@ -204,6 +209,7 @@ class Ticket extends React.Component {
                             })}
                             placeholder="Nickname"/>
                 </div>
+                <p>Submitted tickets count: {this.state.submittedTicketsCount}</p>
                 <Winners winners={this.state.winners} winningNumbers={this.state.winningNumbers}/>
             </div>
         )

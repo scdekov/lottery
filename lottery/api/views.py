@@ -43,7 +43,7 @@ class WinnerTicketSerializer(TicketSerializer):
 class GameSeriazlier(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ('id', 'winning_numbers', 'is_active', 'winners')
+        fields = ('id', 'winning_numbers', 'is_active', 'winners', 'submitted_tickets_count')
         read_only_fields = ('winning_numbers', 'winners')
 
     winners = WinnerTicketSerializer(many=True, read_only=True)

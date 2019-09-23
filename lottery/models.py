@@ -35,6 +35,10 @@ class Game(models.Model):
             where {winners_filter} > 2
         """.format(winners_filter=winners_filter)))
 
+    @property
+    def submitted_tickets_count(self):
+        return self.ticket_set.count()
+
 
 class TicketsMeta(models.base.ModelBase):
     def __new__(cls, clsname, bases, dct):
