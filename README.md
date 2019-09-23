@@ -1,4 +1,5 @@
 # Lottery [demo](https://lottery-6-49.herokuapp.com/)
+*Note: for test purposes games are not reset between every draw so all tickets go in single draw and draw can be performed for the only game multiple times*
 
 ### Prerequisites
 * Python 3.6.7
