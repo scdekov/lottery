@@ -70,8 +70,7 @@ class GameViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def latest(self, reuqest):
         latest_game = Game.objects.filter(is_active=True).order_by('-id').first()
         if latest_game:
-            game_data = GameSeriazlier(latest_game).data
-            game_data.pop('winners')
-            return Response(game_data)
+            latest_game.winning_numbers = []  # skip winners
+            return Response(GameSeriazlier(latest_game).data)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
