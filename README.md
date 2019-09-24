@@ -3,6 +3,7 @@
 
 ### Prerequisites
 * Python 3.6.7
+* PostgresDB 9+
 
 ### Run the project
 
